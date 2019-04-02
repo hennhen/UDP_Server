@@ -23,7 +23,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
-public class Test extends JFrame implements KeyListener {
+public class ControlWindow extends JFrame implements KeyListener {
 
 	// Declare the components;
 	JLabel lblMotorStats;
@@ -54,7 +54,7 @@ public class Test extends JFrame implements KeyListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Test frame = new Test();
+					ControlWindow frame = new ControlWindow();
 					frame.setVisible(true);
 
 				} catch (Exception e) {
@@ -64,10 +64,8 @@ public class Test extends JFrame implements KeyListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Test() {
+	// Constructor, Create the frame.
+	public ControlWindow() {
 		initGUI();
 	}
 

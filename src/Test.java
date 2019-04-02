@@ -73,7 +73,7 @@ public class Test extends JFrame implements KeyListener {
 
 	private void initGUI() {
 		// Window
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 474, 352);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 
@@ -262,8 +262,6 @@ public class Test extends JFrame implements KeyListener {
 			manager.setAngle(angle);
 			break;
 		}
-		
-		
 	}
 
 	@Override

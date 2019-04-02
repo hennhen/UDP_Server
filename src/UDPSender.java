@@ -19,11 +19,11 @@ public class UDPSender extends Thread{
 	public UDPSender(int localPort, String targetIP, int targetPort) {
 		
 		dataOut = new byte[4];		// Initialize bytes
-		dataOut[0] = 1;
-		dataOut[1] = 2;
-		dataOut[2] = 0;
-		dataOut[3] = 0;
-		this.localPort = localPort;
+		dataOut[0] = 1;				// Leading byte to sync
+		dataOut[1] = 2;				// Direction (2, forward; 3, backward)
+		dataOut[2] = 0;				// PWM
+		dataOut[3] = 0;				// Servo
+		this.localPort = localPort;	
 		this.targetPort = targetPort;
 		
 		try {		// Try to format IP

@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
  * Check if far away enough, then give lock back to key presses
  * 
  * Sender has its own array of bytes, we control the car by calling set methods in processor, which is synchronized
- * 
  */
 
 

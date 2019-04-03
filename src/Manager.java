@@ -9,7 +9,6 @@ import javax.swing.SwingUtilities;
  * Sender has its own array of bytes, we control the car by calling set methods in processor, which is synchronized
  */
 
-
 public class Manager extends Thread{
 	
 	UDPSender sender;
@@ -45,6 +44,12 @@ public class Manager extends Thread{
 		listener.start();	// Starts to listen for packets
 		
 		// Calculation stuff
+		while(true) {	// Constantly checking sensor data
+			if(UDPListener.receiveData[1] < 50 && UDPListener.receiveData[1] > 0) {
+				
+			}
+		}
+		
 		
 	}
 }

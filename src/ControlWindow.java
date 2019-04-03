@@ -23,11 +23,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
-public class Test extends JFrame implements KeyListener {
-
-	// Declare the components;
-	JLabel lblMotorStats;
-	JLabel lblServoStats;
+public class ControlWindow extends JFrame implements KeyListener {
 
 	static UDPSender sender;
 	static UDPListener listener;
@@ -36,6 +32,10 @@ public class Test extends JFrame implements KeyListener {
 	static byte pwm;
 	static byte angle;
 
+	// Declare the components;
+	JLabel lblMotorStats;
+	JLabel lblServoStats;
+	JLabel lblPWM;
 	JTextField lblTxPort;
 	JTextField lblRxPort;
 	JTextField lblCarIP;
@@ -44,17 +44,17 @@ public class Test extends JFrame implements KeyListener {
 	JLabel lblMessage2;
 	JButton btnCreateSocket;
 	JSlider PWMSlider;
-	private JSlider angleSlider = new JSlider();
-	private JLabel lblAngle = new JLabel("30");
-	private JLabel DISTANCE_TEXT = new JLabel("Distance: ");
-	public static JLabel lblDistance = new JLabel("0");
-	private JLabel CM_TEXT = new JLabel("cm");
+	JSlider angleSlider = new JSlider();
+	JLabel lblAngle = new JLabel("30");
+	JLabel DISTANCE_TEXT = new JLabel("Distance: ");
+	static JLabel lblDistance = new JLabel("0");
+	JLabel CM_TEXT = new JLabel("cm");
 
 	public static void main(String[] args) throws Exception {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Test frame = new Test();
+					ControlWindow frame = new ControlWindow();
 					frame.setVisible(true);
 
 				} catch (Exception e) {
@@ -64,11 +64,13 @@ public class Test extends JFrame implements KeyListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Test() {
+	// Constructor, Create the frame.
+	public ControlWindow() {
+		pwm = 30;
+		angle = 30;
+		
 		initGUI();
+		addListeners();
 	}
 
 	private void initGUI() {
@@ -142,8 +144,62 @@ public class Test extends JFrame implements KeyListener {
 
 		btnCreateSocket = new JButton("Create Socket");
 		getContentPane().add(btnCreateSocket);
-		btnCreateSocket.addActionListener(new ActionListener() { // Create button is pressed, try to create sender and
-																	// receiver
+		btnCreateSocket.setBounds(159, 88, 143, 29);
+
+		lblPWM = new JLabel();
+		lblPWM.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPWM.setBounds(56, 225, 44, 16);
+		getContentPane().add(lblPWM);
+
+		PWMSlider = new JSlider();
+		PWMSlider.setMaximum(253);
+		PWMSlider.setValue(30);
+		lblPWM.setText(Integer.toString(PWMSlider.getValue()));
+		PWMSlider.setBounds(13, 199, 124, 29);
+		getContentPane().add(PWMSlider);
+
+		JButton btnFocus = new JButton("Focus");
+		btnFocus.setBounds(179, 243, 117, 29);
+		btnFocus.addKeyListener(this);
+		btnFocus.setFocusable(true);
+		btnFocus.requestFocus();
+		getContentPane().add(btnFocus);
+
+		JLabel RX_PORT_TEXT = new JLabel("Rx Port: ");
+		RX_PORT_TEXT.setBounds(228, 27, 61, 16);
+		getContentPane().add(RX_PORT_TEXT);
+
+		lblRxPort = new JTextField();
+		lblRxPort.setBounds(287, 22, 130, 26);
+		getContentPane().add(lblRxPort);
+		lblRxPort.setColumns(10);
+		
+		angleSlider.setMinimum(5);
+		angleSlider.setMaximum(45);
+		angleSlider.setValue(30);
+		angleSlider.setBounds(140, 199, 124, 29);
+		getContentPane().add(angleSlider);
+
+		lblAngle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAngle.setBounds(182, 225, 49, 16);
+		getContentPane().add(lblAngle);
+
+		DISTANCE_TEXT.setBounds(331, 162, 86, 16);
+		getContentPane().add(DISTANCE_TEXT);
+
+		lblDistance.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDistance.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblDistance.setBounds(319, 184, 61, 29);
+		getContentPane().add(lblDistance);
+
+		CM_TEXT.setHorizontalAlignment(SwingConstants.CENTER);
+		CM_TEXT.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		CM_TEXT.setBounds(359, 184, 34, 29);
+		getContentPane().add(CM_TEXT);
+	}
+
+	private void addListeners() {
+		btnCreateSocket.addActionListener(new ActionListener() { // Create button is pressed, try to create sender and receiver
 			public void actionPerformed(ActionEvent e) {
 				try {
 					listener.listeningSocket.close();
@@ -174,82 +230,32 @@ public class Test extends JFrame implements KeyListener {
 				btnCreateSocket.setText("Recreate Socket");
 			}
 		});
-		btnCreateSocket.setBounds(159, 88, 143, 29);
-
-		JLabel lblPWM = new JLabel();
-		lblPWM.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPWM.setBounds(56, 225, 44, 16);
-		getContentPane().add(lblPWM);
-
-		PWMSlider = new JSlider();
-		PWMSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				lblPWM.setText(Integer.toString(PWMSlider.getValue()));
-				pwm = (byte) PWMSlider.getValue();
-			}
-		});
-		PWMSlider.setMaximum(253);
-		PWMSlider.setValue(30);
-		lblPWM.setText(Integer.toString(PWMSlider.getValue()));
-		PWMSlider.setBounds(13, 199, 124, 29);
-		getContentPane().add(PWMSlider);
-
-		JButton btnFocus = new JButton("Focus");
-		btnFocus.setBounds(179, 243, 117, 29);
-		btnFocus.addKeyListener(this);
-		btnFocus.setFocusable(true);
-		btnFocus.requestFocus();
-		getContentPane().add(btnFocus);
-
-		JLabel RX_PORT_TEXT = new JLabel("Rx Port: ");
-		RX_PORT_TEXT.setBounds(228, 27, 61, 16);
-		getContentPane().add(RX_PORT_TEXT);
-
-		lblRxPort = new JTextField();
-		lblRxPort.setBounds(287, 22, 130, 26);
-		getContentPane().add(lblRxPort);
-		lblRxPort.setColumns(10);
-
+		
 		angleSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				lblAngle.setText(Integer.toString(angleSlider.getValue()));
 				angle = (byte) angleSlider.getValue();
 			}
 		});
-		angleSlider.setMinimum(5);
-		angleSlider.setMaximum(45);
-		angleSlider.setValue(30);
-		angleSlider.setBounds(140, 199, 124, 29);
-		getContentPane().add(angleSlider);
-
-		lblAngle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAngle.setBounds(182, 225, 49, 16);
-		getContentPane().add(lblAngle);
-
-		DISTANCE_TEXT.setBounds(331, 162, 86, 16);
-		getContentPane().add(DISTANCE_TEXT);
-
-		lblDistance.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDistance.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblDistance.setBounds(319, 184, 61, 29);
-		getContentPane().add(lblDistance);
-
-		CM_TEXT.setHorizontalAlignment(SwingConstants.CENTER);
-		CM_TEXT.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		CM_TEXT.setBounds(359, 184, 34, 29);
-		getContentPane().add(CM_TEXT);
+		
+		PWMSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				lblPWM.setText(Integer.toString(PWMSlider.getValue()));
+				pwm = (byte) PWMSlider.getValue();
+			}
+		});
 	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch ((char) e.getKeyCode()) {
 		case 'W':
-			lblMotorStats.setText(Integer.toString(pwm));
+			lblMotorStats.setText(Integer.toString(Manager.convertByte(pwm)));
 			manager.setPwm(pwm);
 			manager.setDir((byte) 2);
 			break;
 		case 'S':
-			lblMotorStats.setText(Integer.toString(-pwm));
+			lblMotorStats.setText(Integer.toString(-Manager.convertByte(pwm)));
 			manager.setPwm(pwm);
 			manager.setDir((byte) 3);
 			break;
@@ -283,7 +289,5 @@ public class Test extends JFrame implements KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void keyTyped(KeyEvent e) {}
 }

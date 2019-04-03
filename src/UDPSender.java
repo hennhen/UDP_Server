@@ -47,8 +47,7 @@ public class UDPSender extends Thread{
 	
 	public void run() {
 		while (true) {		// Send data continuously
-			//sendingPacket.setData(dataOut);
-			
+
 			try {
 				sendingSocket.send(sendingPacket);
 				

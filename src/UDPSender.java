@@ -41,27 +41,29 @@ public class UDPSender extends Thread{
 		}
 		
 		sendingPacket = new DatagramPacket(dataOut, dataOut.length, this.targetIP, targetPort);
+		sendingPacket.setData(dataOut);
 		System.out.println("Created socket: " + "Target: " + targetIP + ":" + targetPort + ", sending from " + localPort);
 	}
 	
 	public void run() {
 		while (true) {		// Send data continuously
-			sendingPacket.setData(dataOut);
+			//sendingPacket.setData(dataOut);
 			
 			try {
 				sendingSocket.send(sendingPacket);
 				
+				/*
+				//	Print out the byte for debug
 				System.out.println(dataOut[0]);
 				System.out.println(dataOut[1]);
 				System.out.println(dataOut[2]);
-				System.out.println(dataOut[3]);
+				System.out.println(dataOut[3]);*/
 				
 			} catch (IOException e) {
-				System.out.println("sending error");
 				e.printStackTrace();
 			}
 			
-			try {
+			try {	// Chill for 10 ms between packets
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

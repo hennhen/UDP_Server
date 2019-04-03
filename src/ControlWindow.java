@@ -22,6 +22,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ControlWindow extends JFrame implements KeyListener {
 
@@ -107,11 +108,14 @@ public class ControlWindow extends JFrame implements KeyListener {
 		lblCarIP.setColumns(10);
 
 		lblTxPort = new JTextField();
+		lblTxPort.setBackground(SystemColor.control);
+		lblTxPort.setEditable(true);
 		lblTxPort.setBounds(76, 22, 130, 26);
 		getContentPane().add(lblTxPort);
 		lblTxPort.setColumns(10);
 
 		lblCarPort = new JTextField();
+		lblCarPort.setText("80");
 		lblCarPort.setBounds(287, 55, 130, 26);
 		getContentPane().add(lblCarPort);
 		lblCarPort.setColumns(10);
@@ -200,15 +204,19 @@ public class ControlWindow extends JFrame implements KeyListener {
 
 	private void addListeners() {
 		btnCreateSocket.addActionListener(new ActionListener() { // Create button is pressed, try to create sender and receiver
+			
 			public void actionPerformed(ActionEvent e) {
 				try {
-					listener.listeningSocket.close();
+					listener.listeningSocket.close();		// Try to close existing socket so we don't get binding error
 					sender.sendingSocket.close();
 				} catch (Exception e3) {
 					System.out.println("Closing error, its ok");
 				}
 
 				try {
+					// First randomize a Tx port
+					lblTxPort.setText(Integer.toString(ThreadLocalRandom.current().nextInt(20000, 30000)));
+					
 					// Create sender and receiver
 					sender = new UDPSender(Integer.parseInt(lblTxPort.getText()), lblCarIP.getText(),
 							Integer.parseInt(lblCarPort.getText()));
@@ -217,7 +225,6 @@ public class ControlWindow extends JFrame implements KeyListener {
 					manager.start(); // Also starts sender and listener
 
 					lblMessage1.setText("Socket Created!");
-					lblMessage1.paintImmediately(lblMessage1.getVisibleRect());
 
 				} catch (NumberFormatException e1) {
 					lblMessage1.setText("Input error");
@@ -231,14 +238,14 @@ public class ControlWindow extends JFrame implements KeyListener {
 			}
 		});
 		
-		angleSlider.addChangeListener(new ChangeListener() {
+		angleSlider.addChangeListener(new ChangeListener() {	// Whenever a change is detected on the slider
 			public void stateChanged(ChangeEvent e) {
 				lblAngle.setText(Integer.toString(angleSlider.getValue()));
-				angle = (byte) angleSlider.getValue();
+				angle = (byte) angleSlider.getValue();		// Store new angle into angle
 			}
 		});
 		
-		PWMSlider.addChangeListener(new ChangeListener() {
+		PWMSlider.addChangeListener(new ChangeListener() {		// Similar as above
 			public void stateChanged(ChangeEvent e) {
 				lblPWM.setText(Integer.toString(PWMSlider.getValue()));
 				pwm = (byte) PWMSlider.getValue();
@@ -284,10 +291,8 @@ public class ControlWindow extends JFrame implements KeyListener {
 			manager.setAngle((byte) 0);
 			break;
 		}
-		
-		
 	}
-
+	
 	@Override
 	public void keyTyped(KeyEvent e) {}
 }

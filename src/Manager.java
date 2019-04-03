@@ -20,6 +20,14 @@ public class Manager extends Thread{
 		this.listener = listener;
 	}
 	
+	public static int convertByte(byte in) {		// Fixes negative byte
+		if(in < 0) {
+			return 256 + in;
+		} else {
+			return in;
+		}
+	}
+	
 	public synchronized void setDir(byte dir) {
 		UDPSender.dataOut[1] = dir;
 	}

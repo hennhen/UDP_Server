@@ -44,7 +44,7 @@ public class UDPListener extends Thread{
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						ControlWindow.lblDistance.setText(Integer.toString((int)UDPListener.receiveData[1]));
+						ControlWindow.lblDistance.setText(Integer.toString(Manager.convertByte(UDPListener.receiveData[1])));
 					}
 				});
 				

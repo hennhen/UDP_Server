@@ -109,7 +109,7 @@ public class ControlWindow extends JFrame implements KeyListener {
 
 		lblTxPort = new JTextField();
 		lblTxPort.setBackground(SystemColor.control);
-		lblTxPort.setEditable(false);
+		lblTxPort.setEditable(true);
 		lblTxPort.setBounds(76, 22, 130, 26);
 		getContentPane().add(lblTxPort);
 		lblTxPort.setColumns(10);

@@ -14,7 +14,11 @@ public class Manager extends Thread{
 	UDPSender sender;
 	UDPListener listener;
 	
+	static boolean tooClose;
+	
 	public Manager(UDPSender sender, UDPListener listener){
+		tooClose = false;
+		
 		this.sender = sender;
 		this.listener = listener;
 	}
@@ -45,11 +49,25 @@ public class Manager extends Thread{
 		
 		// Calculation stuff
 		while(true) {	// Constantly checking sensor data
-			if(UDPListener.receiveData[1] < 50 && UDPListener.receiveData[1] > 0) {
+			if(UDPListener.receiveData[1] < 50 && UDPListener.receiveData[1] > 0 && !tooClose) {
+				setPwm((byte) 0);
+				tooClose = true;
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						ControlWindow.lblMessage1.setText("Too Close!");
+					}
+				});
 				
+			} else if (UDPListener.receiveData[1] > 50) {
+				tooClose = false;
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						ControlWindow.lblMessage1.setText("");
+					}
+				});
 			}
 		}
-		
-		
 	}
 }

@@ -36,7 +36,7 @@ public class UDPListener extends Thread{
 		System.out.println(localPort);
 		while (true) {		// Always be listening
 			try {
-				System.out.println("Listening...");
+				//System.out.println("Listening...");
 				listeningSocket.receive(receivePacket);
 				receiveData = receivePacket.getData();
 				System.out.println(receiveData[1]);

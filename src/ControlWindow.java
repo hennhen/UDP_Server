@@ -49,7 +49,7 @@ public class ControlWindow extends JFrame implements KeyListener {
 	JTextField lblRxPort;
 	JTextField lblCarIP;
 	JTextField lblCarPort;
-	JLabel lblMessage1;
+	static JLabel lblMessage1;
 	JLabel lblMessage2;
 	JButton btnCreateSocket;
 	JSlider PWMSlider;

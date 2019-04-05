@@ -47,9 +47,17 @@ public class Manager extends Thread{
 		sender.start();		// Starts to send data
 		listener.start();	// Starts to listen for packets
 		
+		
 		// Calculation stuff
 		while(true) {	// Constantly checking sensor data
-			if(UDPListener.receiveData[1] < 50 && UDPListener.receiveData[1] > 0 && !tooClose) {
+			try {
+				Thread.sleep((long) 0.1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(UDPListener.receiveData[1] < 60 && UDPListener.receiveData[1] > 0 && !tooClose) {
+				System.out.println("tooclose");
 				setPwm((byte) 0);
 				tooClose = true;
 				SwingUtilities.invokeLater(new Runnable() {
@@ -58,8 +66,7 @@ public class Manager extends Thread{
 						ControlWindow.lblMessage1.setText("Too Close!");
 					}
 				});
-				
-			} else if (UDPListener.receiveData[1] > 50) {
+			} else if (UDPListener.receiveData[1] > 60 || UDPListener.receiveData[1] == 0) {
 				tooClose = false;
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override

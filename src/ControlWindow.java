@@ -115,11 +115,21 @@ public class ControlWindow extends JFrame implements KeyListener {
 	
 			CM_TEXT.setHorizontalAlignment(SwingConstants.CENTER);
 			CM_TEXT.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-			CM_TEXT.setBounds(359, 184, 34, 29);
+			CM_TEXT.setBounds(369, 184, 34, 29);
 			getContentPane().add(CM_TEXT);
 	
 			DISTANCE_TEXT.setBounds(331, 162, 86, 16);
 			getContentPane().add(DISTANCE_TEXT);
+			
+			JLabel MS_TEXT = new JLabel("m/s");
+			MS_TEXT.setHorizontalAlignment(SwingConstants.CENTER);
+			MS_TEXT.setFont(new Font("Dialog", Font.PLAIN, 16));
+			MS_TEXT.setBounds(369, 243, 34, 29);
+			getContentPane().add(MS_TEXT);
+			
+			JLabel SPEED_TEXT = new JLabel("Speed:");
+			SPEED_TEXT.setBounds(329, 226, 46, 14);
+			getContentPane().add(SPEED_TEXT);
 
 		// ============ Mutable components ============
 		// Socket Creation
@@ -134,7 +144,6 @@ public class ControlWindow extends JFrame implements KeyListener {
 			lblTxPort.setBounds(76, 22, 130, 26);
 			getContentPane().add(lblTxPort);
 			lblTxPort.setColumns(10);
-			
 			
 			lblRxPort = new JTextField();
 			lblRxPort.setBounds(287, 22, 130, 26);
@@ -166,6 +175,12 @@ public class ControlWindow extends JFrame implements KeyListener {
 			lblDistance.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 			lblDistance.setBounds(319, 184, 61, 29);
 			getContentPane().add(lblDistance);
+			
+			JLabel lblSpeed = new JLabel("0");
+			lblSpeed.setHorizontalAlignment(SwingConstants.CENTER);
+			lblSpeed.setFont(new Font("Dialog", Font.PLAIN, 16));
+			lblSpeed.setBounds(319, 243, 61, 29);
+			getContentPane().add(lblSpeed);
 
 		// Messages
 			lblMessage1 = new JLabel("");

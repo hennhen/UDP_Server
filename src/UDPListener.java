@@ -44,6 +44,7 @@ public class UDPListener extends Thread{
 					@Override
 					public void run() {
 						ControlWindow.lblDistance.setText(Integer.toString(Manager.convertByte(UDPListener.receiveData[1])));
+						ControlWindow.lblDistance.setText(Float.toString((float) ((float)Manager.convertByte(UDPListener.receiveData[2]) * 0.148148)));
 					}
 				});
 				

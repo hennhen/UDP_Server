@@ -58,7 +58,7 @@ public class Manager extends Thread{
 			}
 			if(UDPListener.receiveData[1] < 60 && UDPListener.receiveData[1] > 0 && !tooClose) {
 				System.out.println("tooclose");
-				setPwm((byte) 0);
+				// setPwm((byte) 0);
 				tooClose = true;
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override

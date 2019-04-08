@@ -36,10 +36,9 @@ public class UDPListener extends Thread{
 		System.out.println(localPort);
 		while (true) {		// Always be listening
 			try {
-				//System.out.println("Listening...");
 				listeningSocket.receive(receivePacket);
 				receiveData = receivePacket.getData();
-				System.out.println(receiveData[1]);
+				System.out.println("\n" + receiveData[0] + "\n"  + receiveData[1] + "\n" + receiveData[2]);
 				
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override

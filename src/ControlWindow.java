@@ -275,7 +275,7 @@ public class ControlWindow extends JFrame implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		switch ((char) e.getKeyCode()) {
 		case 'W':
-			if (Manager.tooClose) break;
+			//if (Manager.tooClose) break;
 			lblMotorStats.setText(Integer.toString(Manager.convertByte(pwm)));
 			manager.setPwm(pwm);
 			manager.setDir((byte) 2);

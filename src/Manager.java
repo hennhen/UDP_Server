@@ -1,13 +1,5 @@
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-
-/*
- * Processes the info from Listener, make decision
- * 
- * Need to block sending from key presses when too close
- * Check if far away enough, then give lock back to key presses
- * 
- * Sender has its own array of bytes, we control the car by calling set methods in processor, which is synchronized
- */
 
 public class Manager extends Thread{
 	
@@ -23,12 +15,23 @@ public class Manager extends Thread{
 		this.listener = listener;
 	}
 	
-	public static int convertByte(byte in) {		// Fixes negative byte
+	/* Converts signed byte in Java */
+	public static int convertByteToInt(byte in) {
 		if(in < 0) {
 			return 256 + in;
 		} else {
 			return in;
 		}
+	}
+	
+	/* Updates a JLabel safely in another thread */
+	public static void updateLabel(JLabel lbl, String str) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				lbl.setText(str);
+			}
+		});
 	}
 	
 	public synchronized void setDir(byte dir) {
@@ -44,36 +47,36 @@ public class Manager extends Thread{
 	}
 	
 	public void run() {
-		sender.start();		// Starts to send data
-		listener.start();	// Starts to listen for packets
+		sender.start();
+		listener.start();
 		
-		
-		// Calculation stuff
-		while(true) {	// Constantly checking sensor data
+		/* Constantly checking sensor data */
+		while(true) {
 			try {
 				Thread.sleep((long) 0.1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(UDPListener.receiveData[1] < 60 && UDPListener.receiveData[1] > 0 && !tooClose) {
-				System.out.println("tooclose");
-				// setPwm((byte) 0);
+			
+			/* If the car is within 80 cm from a wall for the first time*/
+			if(UDPListener.receiveData[1] < 80 && UDPListener.receiveData[1] > 0 && !tooClose) {
+				
+				/* If the car is going forward */
+				if(UDPSender.dataOut[1] == 2){
+					/* Reverse thrust until less than 2 pulses per interval is collected from the encoder (until it stops) */
+					while(UDPListener.receiveData[2] > 2 && UDPListener.receiveData[1] < 80 && UDPListener.receiveData[1] > 0) {
+						setDir((byte) 3);
+						setPwm((byte) 200);
+					}
+				}
+				/* Finally stop the car */
+				setPwm((byte) 0);
 				tooClose = true;
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						ControlWindow.lblMessage1.setText("Too Close!");
-					}
-				});
-			} else if (UDPListener.receiveData[1] > 60 || UDPListener.receiveData[1] == 0) {
+				updateLabel(ControlWindow.lblMessage2, "Too Close!");
+				
+			} else if (UDPListener.receiveData[1] > 80 || UDPListener.receiveData[1] == 0) {
 				tooClose = false;
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						ControlWindow.lblMessage1.setText("");
-					}
-				});
+				updateLabel(ControlWindow.lblMessage2, "");
 			}
 		}
 	}
